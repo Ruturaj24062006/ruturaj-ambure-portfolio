@@ -41,7 +41,7 @@ const projects: ProjectItem[] = [
       "Implemented U-Net-based tumor segmentation to accurately identify and analyze tumor regions from medical imaging data."
     ],
     tech: ["Python", "PyTorch", "XGBoost", "ResNet50", "U-Net"],
-    github: "https://github.com/Ruturaj24062006/TumorVerse",
+    github: "https://github.com/Ruturaj24062006/tumorverse",
     live: "#",
     caseStudy: "#",
     icon: <BrainCircuit className="w-6 h-6 text-brand-cyan" />,
