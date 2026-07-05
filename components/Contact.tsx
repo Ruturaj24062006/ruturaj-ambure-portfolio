@@ -137,7 +137,7 @@ export default function Contact() {
                 {/* LinkedIn Link */}
                 <Magnetic>
                   <a
-                    href="https://www.linkedin.com/in/ruturaj-ambure-282672288"
+                    href="https://www.linkedin.com/in/ruturaj-ambure-2b3385327"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between w-full p-4 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-brand-purple/35 text-white/70 hover:text-white transition-all duration-300 group"
