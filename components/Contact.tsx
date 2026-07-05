@@ -211,14 +211,15 @@ export default function Contact() {
 
               {/* GitHub link */}
               <a
-                href="https://github.com/ruturajambure"
+                href="https://github.com/Ruturaj24062006"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-4 p-3.5 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-brand-cyan/30 text-white/70 hover:text-white transition-all duration-300 group"
               >
                 <GithubIcon className="w-4 h-4 text-brand-cyan shrink-0" />
-                <span className="truncate">github/ruturajambure</span>
+                <span className="truncate">github/Ruturaj24062006</span>
               </a>
+
 
 
             </div>

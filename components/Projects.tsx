@@ -41,7 +41,7 @@ const projects: ProjectItem[] = [
       "Implemented U-Net-based tumor segmentation to accurately identify and analyze tumor regions from medical imaging data."
     ],
     tech: ["Python", "PyTorch", "XGBoost", "ResNet50", "U-Net"],
-    github: "https://github.com/ruturajambure/TumorVerse",
+    github: "https://github.com/Ruturaj24062006/TumorVerse",
     live: "#",
     caseStudy: "#",
     icon: <BrainCircuit className="w-6 h-6 text-brand-cyan" />,
@@ -59,7 +59,7 @@ const projects: ProjectItem[] = [
       "Built an interactive web app for embedding and retrieving hidden data via image-based communication."
     ],
     tech: ["React.js", "Python", "Image Processing", "Cryptography", "OOP"],
-    github: "https://github.com/ruturajambure/StegoVault",
+    github: "https://github.com/Ruturaj24062006/StegoVault",
     live: "#",
     caseStudy: "#",
     icon: <ShieldAlert className="w-6 h-6 text-brand-purple" />,
@@ -76,7 +76,7 @@ const projects: ProjectItem[] = [
       "Enabled multilingual document intelligence and explainable risk assessment by combining OCR, ML, and 40+ financial data sources."
     ],
     tech: ["React.js", "FastAPI", "PostgreSQL", "PaddleOCR", "XGBoost"],
-    github: "https://github.com/ruturajambure/KARTA",
+    github: "https://github.com/Ruturaj24062006/KARTA",
     live: "#",
     caseStudy: "#",
     icon: <Code2 className="w-6 h-6 text-blue-400" />,
