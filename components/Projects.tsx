@@ -140,7 +140,7 @@ function ProjectCard({ project }: { project: ProjectItem }) {
         rotateY,
         transformStyle: "preserve-3d",
       }}
-      className="glass-card rounded-2xl relative overflow-hidden flex flex-col justify-between border border-white/5 bg-brand-bg-card/30 p-6 md:p-8 cursor-pointer transition-shadow duration-300 hover:shadow-[0_15px_40px_rgba(0,0,0,0.4)] group"
+      className="glass-card rounded-2xl relative overflow-hidden flex flex-col justify-between bg-brand-bg-card/35 p-6 md:p-8 cursor-pointer transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,229,255,0.04)] group gradient-border-mask sheen-glow"
     >
       {/* Dynamic Background Glow */}
       <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-20 group-hover:opacity-40 transition-opacity duration-700`} />
@@ -187,7 +187,7 @@ function ProjectCard({ project }: { project: ProjectItem }) {
         </div>
 
         {/* Bullet details shown on hover */}
-        <div className="h-0 group-hover:h-auto overflow-hidden opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out border-t border-white/5 mt-4 pt-4 space-y-2">
+        <div className="max-h-0 group-hover:max-h-40 overflow-hidden opacity-0 group-hover:opacity-100 transition-all duration-700 ease-in-out border-t border-white/5 mt-4 pt-4 space-y-2">
           {project.details.map((d, index) => (
             <div key={index} className="flex gap-2 items-start text-xs text-white/50 leading-relaxed">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-cyan mt-1.5 shrink-0" />

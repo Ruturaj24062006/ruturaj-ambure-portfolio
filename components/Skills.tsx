@@ -1,124 +1,166 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface SkillItem {
+  name: string;
+  detail: string;
+}
 
 interface SkillGroup {
   category: string;
-  skills: string[];
-  color: string; // Tailwind color class for neon effects
-  cubeColor: string; // RGB/Hex for R3F-like CSS Cube faces
+  skills: SkillItem[];
+  color: string;      // Tailwind border/shadow color
+  dotColor: string;   // Hex color for glowing dot
 }
 
 const skillGroups: SkillGroup[] = [
   {
-    category: "Programming",
-    skills: ["C/C++", "Python", "JavaScript", "TypeScript", "SQL"],
-    color: "from-cyan-500 to-blue-500",
-    cubeColor: "rgba(0, 229, 255, 0.35)",
-  },
-  {
     category: "AI & Machine Learning",
-    skills: ["Machine Learning", "Deep Learning", "CNN", "U-Net", "XGBoost"],
-    color: "from-purple-500 to-indigo-500",
-    cubeColor: "rgba(124, 58, 237, 0.35)",
+    color: "group-hover:border-brand-purple/40 shadow-brand-purple/5",
+    dotColor: "#7C3AED",
+    skills: [
+      { name: "Machine Learning", detail: "Supervised & Unsupervised pipelines" },
+      { name: "Deep Learning", detail: "Neural networks & neural systems" },
+      { name: "CNN", detail: "Convolutional models for computer vision" },
+      { name: "U-Net", detail: "Biomedical tumor segmentations" },
+      { name: "XGBoost", detail: "Gradient boosted decision trees" }
+    ]
   },
   {
-    category: "Web & Frontend",
-    skills: ["React.js", "Next.js", "Tailwind CSS", "TypeScript", "HTML5/CSS3"],
-    color: "from-blue-400 to-cyan-400",
-    cubeColor: "rgba(96, 165, 250, 0.35)",
+    category: "Languages & Programming",
+    color: "group-hover:border-brand-cyan/40 shadow-brand-cyan/5",
+    dotColor: "#00E5FF",
+    skills: [
+      { name: "C/C++", detail: "DSA & Low-level optimizations" },
+      { name: "Python", detail: "ML modeling & FastAPI pipelines" },
+      { name: "TypeScript", detail: "Type-safe robust frontends" },
+      { name: "JavaScript", detail: "Web apps & interactive UI logic" },
+      { name: "SQL", detail: "Relational DB design & query tuning" }
+    ]
   },
   {
-    category: "Backend & API Development",
-    skills: ["Node.js", "Express", "FastAPI", "RESTful APIs"],
-    color: "from-indigo-600 to-purple-600",
-    cubeColor: "rgba(79, 70, 229, 0.35)",
+    category: "Frontend Architectures",
+    color: "group-hover:border-blue-500/40 shadow-blue-500/5",
+    dotColor: "#3B82F6",
+    skills: [
+      { name: "React.js", detail: "Component architectures & hooks" },
+      { name: "Next.js", detail: "App Router, SSR & performance tuning" },
+      { name: "Tailwind CSS", detail: "Utility-first clean design styling" },
+      { name: "HTML5/CSS3", detail: "Semantic web & styling foundations" }
+    ]
   },
   {
-    category: "Databases",
-    skills: ["MySQL", "PostgreSQL"],
-    color: "from-teal-400 to-emerald-500",
-    cubeColor: "rgba(45, 212, 191, 0.35)",
+    category: "Backend & Systems",
+    color: "group-hover:border-indigo-500/40 shadow-indigo-500/5",
+    dotColor: "#6366F1",
+    skills: [
+      { name: "FastAPI", detail: "High-performance Python backends" },
+      { name: "Node.js", detail: "Event-driven asynchronous services" },
+      { name: "Express", detail: "RESTful web API routers" },
+      { name: "RESTful APIs", detail: "Secure modular web integrations" }
+    ]
   },
   {
-    category: "Core CS & Algorithms",
-    skills: ["Data Structures & Algorithms", "OOP", "DBMS", "Computer Networks"],
-    color: "from-pink-500 to-purple-500",
-    cubeColor: "rgba(236, 72, 153, 0.35)",
+    category: "Relational Databases",
+    color: "group-hover:border-teal-500/40 shadow-teal-500/5",
+    dotColor: "#14B8A6",
+    skills: [
+      { name: "PostgreSQL", detail: "Scalable enterprise data storage" },
+      { name: "MySQL", detail: "Relational data tables & indexes" }
+    ]
   },
   {
-    category: "Tools & Git",
-    skills: ["Git", "GitHub", "VS Code"],
-    color: "from-amber-500 to-orange-500",
-    cubeColor: "rgba(245, 158, 11, 0.35)",
+    category: "Core Computer Science",
+    color: "group-hover:border-pink-500/40 shadow-pink-500/5",
+    dotColor: "#EC4899",
+    skills: [
+      { name: "Data Structures & Algorithms", detail: "Optimal time & space complexity" },
+      { name: "OOP", detail: "Modular encapsulation & polymorphism" },
+      { name: "DBMS", detail: "Database relations & normalization" },
+      { name: "Computer Networks", detail: "OSI model, TCP/IP protocols" }
+    ]
   },
+  {
+    category: "Development Tooling",
+    color: "group-hover:border-amber-500/40 shadow-amber-500/5",
+    dotColor: "#F59E0B",
+    skills: [
+      { name: "Git", detail: "Distributed version control systems" },
+      { name: "GitHub", detail: "Collaboration pipelines & actions" },
+      { name: "VS Code", detail: "Development workspace & tooling" }
+    ]
+  }
 ];
 
-// Helper to render the CSS 3D Cube
-function CSS3DCube({ color }: { color: string }) {
+function FloatingCapsule({ 
+  skill, 
+  dotColor, 
+  index 
+}: { 
+  skill: SkillItem; 
+  dotColor: string; 
+  index: number; 
+}) {
+  const [active, setActive] = useState(false);
+
+  // Staggered slow float durations to make them look organic
+  const floatDuration = 3 + (index % 3) * 0.7;
+  const floatOffset = index % 2 === 0 ? [0, -6, 0] : [-3, 3, -3];
+
   return (
-    <div className="w-12 h-12 relative shrink-0" style={{ perspective: "400px" }}>
-      <div 
-        className="w-full h-full absolute transform-style-3d animate-[spin_8s_linear_infinite] hover:animate-[spin_4s_linear_infinite]"
-        style={{ transformStyle: "preserve-3d" }}
+    <div className="relative">
+      <motion.div
+        animate={{
+          y: floatOffset,
+          x: index % 2 === 0 ? [-2, 2, -2] : [0, 0, 0]
+        }}
+        transition={{
+          duration: floatDuration,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        onMouseEnter={() => setActive(true)}
+        onMouseLeave={() => setActive(false)}
+        className={`relative inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-white/5 bg-white/[0.02] text-[11px] font-mono tracking-wide text-white/80 hover:text-white hover:bg-white/[0.04] transition-all duration-300 cursor-help select-none ${
+          active ? "border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.06)] scale-105" : ""
+        }`}
       >
-        {/* Front */}
-        <div 
-          className="absolute inset-0 border border-white/25 backdrop-blur-[1px]"
+        {/* Glow Dot */}
+        <span 
+          className="w-1.5 h-1.5 rounded-full shrink-0" 
           style={{ 
-            backgroundColor: color, 
-            transform: "translateZ(24px)",
-          }}
+            backgroundColor: dotColor,
+            boxShadow: `0 0 8px ${dotColor}`
+          }} 
         />
-        {/* Back */}
-        <div 
-          className="absolute inset-0 border border-white/25 backdrop-blur-[1px]"
-          style={{ 
-            backgroundColor: color, 
-            transform: "rotateY(180deg) translateZ(24px)",
-          }}
-        />
-        {/* Left */}
-        <div 
-          className="absolute inset-0 border border-white/25 backdrop-blur-[1px]"
-          style={{ 
-            backgroundColor: color, 
-            transform: "rotateY(-90deg) translateZ(24px)",
-          }}
-        />
-        {/* Right */}
-        <div 
-          className="absolute inset-0 border border-white/25 backdrop-blur-[1px]"
-          style={{ 
-            backgroundColor: color, 
-            transform: "rotateY(90deg) translateZ(24px)",
-          }}
-        />
-        {/* Top */}
-        <div 
-          className="absolute inset-0 border border-white/25 backdrop-blur-[1px]"
-          style={{ 
-            backgroundColor: color, 
-            transform: "rotateX(90deg) translateZ(24px)",
-          }}
-        />
-        {/* Bottom */}
-        <div 
-          className="absolute inset-0 border border-white/25 backdrop-blur-[1px]"
-          style={{ 
-            backgroundColor: color, 
-            transform: "rotateX(-90deg) translateZ(24px)",
-          }}
-        />
-      </div>
+        <span>{skill.name}</span>
+      </motion.div>
+
+      {/* Hover Info Tooltip */}
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            initial={{ opacity: 0, y: 5, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 5, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-[#0b1120] border border-white/10 rounded-lg shadow-xl z-30 pointer-events-none text-center"
+          >
+            <div className="text-[10px] text-white font-medium leading-relaxed font-sans">
+              {skill.detail}
+            </div>
+            {/* Tooltip Arrow */}
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-width-[5px] border-solid border-t-white/10 border-r-transparent border-b-transparent border-l-transparent w-0 h-0" />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 export default function Skills() {
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-
   return (
     <section id="skills" className="py-24 relative overflow-hidden">
       <div className="container max-w-5xl mx-auto px-6 relative z-10">
@@ -127,55 +169,43 @@ export default function Skills() {
         <div className="flex flex-col mb-16">
           <span className="font-mono text-xs text-brand-cyan tracking-[0.2em] uppercase mb-2">02 // Knowledge Matrix</span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white">
-            Skill Core & Cubes
+            Skill Core & Capsules
           </h2>
           <div className="w-12 h-1 bg-gradient-to-r from-brand-cyan to-brand-purple mt-3 rounded-full" />
         </div>
 
-        {/* Grid of Skill Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {skillGroups.map((group, idx) => {
-            const isHovered = hoveredIdx === idx;
-            return (
-              <div
-                key={group.category}
-                onMouseEnter={() => setHoveredIdx(idx)}
-                onMouseLeave={() => setHoveredIdx(null)}
-                className="glass-card p-6 rounded-2xl relative overflow-hidden flex flex-col justify-between min-h-[220px] transition-all duration-300 group"
-              >
-                {/* Visual Glow behind card */}
-                <div 
-                  className={`absolute -inset-4 bg-gradient-to-r ${group.color} opacity-0 group-hover:opacity-[0.05] blur-xl transition-opacity duration-300 pointer-events-none`} 
-                />
-
-                {/* Top Section: Title & Cube */}
-                <div className="flex items-start justify-between gap-4">
-                  <h3 className="font-display font-bold text-white text-base tracking-wide leading-snug max-w-[70%] pt-1">
-                    {group.category}
-                  </h3>
-                  
-                  {/* CSS 3D Cube */}
-                  <CSS3DCube color={group.cubeColor} />
-                </div>
-
-                {/* Bottom Section: Skills List */}
-                <div className="mt-8 flex flex-wrap gap-1.5">
-                  {group.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-2.5 py-1 text-[11px] font-mono tracking-wide rounded-md bg-white/[0.03] border border-white/5 text-white/70 group-hover:border-white/10 group-hover:text-white/95 transition-colors duration-300"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-                
-                {/* Tech HUD Line */}
-                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-cyan/20 via-brand-purple/20 to-transparent scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
+        {/* Categories Stack */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {skillGroups.map((group) => (
+            <div
+              key={group.category}
+              className={`glass-panel p-6 rounded-2xl border border-white/5 transition-all duration-500 shadow-xl group ${group.color}`}
+            >
+              {/* Category Header */}
+              <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-5">
+                <h3 className="font-display font-bold text-sm tracking-wide text-white/90">
+                  {group.category}
+                </h3>
+                <span className="font-mono text-[8px] text-white/30 tracking-widest uppercase">
+                  MATRIX_SECTOR
+                </span>
               </div>
-            );
-          })}
+
+              {/* Floating Capsules Cloud */}
+              <div className="flex flex-wrap gap-3.5">
+                {group.skills.map((skill, index) => (
+                  <FloatingCapsule 
+                    key={skill.name} 
+                    skill={skill} 
+                    dotColor={group.dotColor}
+                    index={index}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
+
       </div>
     </section>
   );

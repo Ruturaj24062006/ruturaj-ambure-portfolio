@@ -10,8 +10,9 @@ export default function About() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const rotateX = useSpring(x, { stiffness: 100, damping: 20 });
-  const rotateY = useSpring(y, { stiffness: 100, damping: 20 });
+  // Smooth springs with premium damping
+  const rotateX = useSpring(x, { stiffness: 90, damping: 22 });
+  const rotateY = useSpring(y, { stiffness: 90, damping: 22 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -23,9 +24,9 @@ export default function About() {
     const relativeX = e.clientX - rect.left - width / 2;
     const relativeY = e.clientY - rect.top - height / 2;
 
-    // Set rotation limits (max 15 deg)
-    x.set(-(relativeY / (height / 2)) * 15);
-    y.set((relativeX / (width / 2)) * 15);
+    // Set rotation limits (max 8 deg for premium visual control)
+    x.set(-(relativeY / (height / 2)) * 8);
+    y.set((relativeX / (width / 2)) * 8);
   };
 
   const handleMouseLeave = () => {
@@ -54,7 +55,7 @@ export default function About() {
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-              className="relative w-full max-w-[320px] aspect-[4/5] rounded-2xl border border-white/10 bg-brand-bg-card/40 overflow-hidden shadow-2xl p-2 group cursor-pointer"
+              className="relative w-full max-w-[300px] aspect-[4/5] rounded-2xl bg-brand-bg-card/35 overflow-hidden shadow-2xl p-2 group cursor-pointer gradient-border-mask sheen-glow"
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-brand-cyan/10 to-brand-purple/10 pointer-events-none" />
               <div className="relative w-full h-full rounded-xl overflow-hidden bg-[#0a0f1d]">
@@ -63,18 +64,18 @@ export default function About() {
                   alt="Ruturaj Ambure"
                   fill
                   sizes="(max-width: 320px) 100vw, 320px"
-                  className="object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700 ease-out"
+                  className="object-cover object-top filter brightness-[0.98] contrast-[1.02] saturate-[0.95] group-hover:scale-105 transition-all duration-700 ease-out"
                 />
                 
                 {/* HUD border details */}
-                <div className="absolute inset-4 border border-white/5 rounded-lg pointer-events-none group-hover:border-brand-cyan/20 transition-colors duration-500" />
+                <div className="absolute inset-4 border border-white/5 rounded-lg pointer-events-none group-hover:border-brand-cyan/25 transition-colors duration-500" />
               </div>
 
-              {/* Decorative brackets */}
-              <div className="absolute top-4 left-4 w-3 h-3 border-t border-l border-white/30 z-20 group-hover:border-brand-cyan" />
-              <div className="absolute top-4 right-4 w-3 h-3 border-t border-r border-white/30 z-20 group-hover:border-brand-cyan" />
-              <div className="absolute bottom-4 left-4 w-3 h-3 border-b border-l border-white/30 z-20 group-hover:border-brand-cyan" />
-              <div className="absolute bottom-4 right-4 w-3 h-3 border-b border-r border-white/30 z-20 group-hover:border-brand-cyan" />
+              {/* Decorative corner brackets */}
+              <div className="absolute top-4 left-4 w-3.5 h-3.5 border-t border-l border-brand-cyan/40 z-20 pointer-events-none" />
+              <div className="absolute top-4 right-4 w-3.5 h-3.5 border-t border-r border-brand-cyan/40 z-20 pointer-events-none" />
+              <div className="absolute bottom-4 left-4 w-3.5 h-3.5 border-b border-l border-brand-cyan/40 z-20 pointer-events-none" />
+              <div className="absolute bottom-4 right-4 w-3.5 h-3.5 border-b border-r border-brand-cyan/40 z-20 pointer-events-none" />
             </motion.div>
           </div>
 

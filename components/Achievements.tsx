@@ -35,9 +35,53 @@ function AnimatedCounter({ value, duration = 1.5 }: { value: number; duration?: 
   return <span ref={ref}>{count}</span>;
 }
 
-export default function Achievements() {
+function CgpaRadial({ isInView }: { isInView: boolean }) {
+  const radius = 30;
+  const circumference = 2 * Math.PI * radius;
+  const cgpaPercent = 8.67 / 10;
+  const strokeDashoffset = circumference - (cgpaPercent * circumference);
+
   return (
-    <section id="achievements" className="py-24 relative overflow-hidden">
+    <div className="relative w-16 h-16 flex items-center justify-center shrink-0 mb-3">
+      <svg className="w-full h-full transform -rotate-90">
+        {/* Base Track */}
+        <circle
+          cx="32"
+          cy="32"
+          r={radius}
+          stroke="rgba(255, 255, 255, 0.04)"
+          strokeWidth="4"
+          fill="transparent"
+        />
+        {/* Colored Progress Ring */}
+        <motion.circle
+          cx="32"
+          cy="32"
+          r={radius}
+          stroke="#00E5FF"
+          strokeWidth="4.5"
+          fill="transparent"
+          strokeDasharray={circumference}
+          initial={{ strokeDashoffset: circumference }}
+          animate={isInView ? { strokeDashoffset } : {}}
+          transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+          strokeLinecap="round"
+          style={{
+            filter: "drop-shadow(0 0 6px rgba(0, 229, 255, 0.4))"
+          }}
+        />
+      </svg>
+      <span className="absolute font-display font-black text-sm text-white">8.67</span>
+    </div>
+  );
+}
+
+export default function Achievements() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  return (
+    <section id="achievements" className="py-24 relative overflow-hidden" ref={ref}>
       <div className="container max-w-5xl mx-auto px-6 relative z-10">
         
         {/* Section Heading */}
@@ -53,37 +97,31 @@ export default function Achievements() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
           
           {/* Patents Counter */}
-          <div className="glass-card p-6 md:p-8 rounded-2xl flex flex-col items-center justify-center text-center relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-brand-cyan to-transparent" />
-            <Award className="w-8 h-8 text-brand-cyan mb-3 group-hover:scale-110 transition-transform duration-300" />
+          <div className="glass-card p-6 md:p-8 rounded-2xl flex flex-col items-center justify-center text-center relative overflow-hidden group gradient-border-mask sheen-glow">
+            <Award className="w-7 h-7 text-brand-cyan mb-3 group-hover:scale-110 transition-transform duration-300" />
             <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">
               <AnimatedCounter value={2} />
             </span>
-            <span className="font-mono text-[10px] tracking-widest text-white/50 uppercase mt-2">
+            <span className="font-mono text-[9px] tracking-widest text-white/40 uppercase mt-2.5">
               Patents Published
             </span>
           </div>
 
           {/* DSA Counter */}
-          <div className="glass-card p-6 md:p-8 rounded-2xl flex flex-col items-center justify-center text-center relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-brand-purple to-transparent" />
-            <BookOpen className="w-8 h-8 text-brand-purple mb-3 group-hover:scale-110 transition-transform duration-300" />
+          <div className="glass-card p-6 md:p-8 rounded-2xl flex flex-col items-center justify-center text-center relative overflow-hidden group gradient-border-mask sheen-glow">
+            <BookOpen className="w-7 h-7 text-brand-purple mb-3 group-hover:scale-110 transition-transform duration-300" />
             <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">
               <AnimatedCounter value={250} />+
             </span>
-            <span className="font-mono text-[10px] tracking-widest text-white/50 uppercase mt-2">
+            <span className="font-mono text-[9px] tracking-widest text-white/40 uppercase mt-2.5">
               DSA Solved (LeetCode)
             </span>
           </div>
 
-          {/* CGPA Counter */}
-          <div className="glass-card p-6 md:p-8 rounded-2xl flex flex-col items-center justify-center text-center relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-blue-500 to-transparent" />
-            <GraduationCap className="w-8 h-8 text-blue-400 mb-3 group-hover:scale-110 transition-transform duration-300" />
-            <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">
-              8.67
-            </span>
-            <span className="font-mono text-[10px] tracking-widest text-white/50 uppercase mt-2">
+          {/* CGPA Counter - Radial Circle */}
+          <div className="glass-card p-6 md:p-8 rounded-2xl flex flex-col items-center justify-center text-center relative overflow-hidden group gradient-border-mask sheen-glow">
+            <CgpaRadial isInView={isInView} />
+            <span className="font-mono text-[9px] tracking-widest text-white/40 uppercase mt-2.5">
               B.Tech VIT CGPA
             </span>
           </div>
@@ -99,7 +137,7 @@ export default function Achievements() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="glass-card p-6 rounded-2xl relative overflow-hidden group"
+            className="glass-card p-6 rounded-2xl relative overflow-hidden group gradient-border-mask sheen-glow"
           >
             <div className="flex items-center gap-3.5 border-b border-white/5 pb-4 mb-4">
               <div className="p-2 bg-brand-cyan/10 rounded-lg">
@@ -121,7 +159,7 @@ export default function Achievements() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="glass-card p-6 rounded-2xl relative overflow-hidden group"
+            className="glass-card p-6 rounded-2xl relative overflow-hidden group gradient-border-mask sheen-glow"
           >
             <div className="flex items-center gap-3.5 border-b border-white/5 pb-4 mb-4">
               <div className="p-2 bg-brand-purple/10 rounded-lg">

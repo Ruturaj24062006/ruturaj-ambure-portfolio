@@ -22,6 +22,7 @@ const navItems: NavItem[] = [
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState("#home");
   const [visible, setVisible] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
 
@@ -36,6 +37,7 @@ export default function Navbar() {
         setVisible(true); // Scrolling up
       }
       lastScrollY.current = currentScrollY;
+      setIsScrolled(currentScrollY > 40);
 
       // Active Section Tracking
       const sections = navItems.map((item) => document.querySelector(item.href));
@@ -79,7 +81,11 @@ export default function Navbar() {
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none"
         >
-          <nav className="w-full max-w-5xl glass-nav rounded-full px-6 py-3.5 flex items-center justify-between border border-white/5 shadow-[0_8px_32px_0_rgba(5,8,22,0.6)] pointer-events-auto relative">
+          <nav className={`w-full max-w-5xl glass-nav rounded-full flex items-center justify-between border transition-all duration-500 pointer-events-auto relative ${
+            isScrolled 
+              ? "px-5 py-2.5 border-brand-cyan/20 shadow-[0_4px_30px_rgba(0,229,255,0.08)] bg-brand-bg-dark/85" 
+              : "px-6 py-3.5 border-white/5 shadow-[0_8px_32px_0_rgba(5,8,22,0.6)]"
+          }`}>
             
             {/* Logo / Terminal Signifier */}
             <a 
@@ -88,7 +94,7 @@ export default function Navbar() {
               className="flex items-center gap-2 group font-mono text-sm tracking-wider font-bold text-white transition-colors hover:text-brand-cyan"
             >
               <Terminal className="w-4 h-4 text-brand-cyan group-hover:rotate-12 transition-transform duration-300" />
-              <span>RA<span className="text-brand-cyan font-sans font-medium">.IO</span></span>
+              <span>RA<span className="text-brand-cyan font-sans font-medium">//</span></span>
             </a>
 
             {/* Desktop Navigation Links */}
